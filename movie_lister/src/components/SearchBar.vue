@@ -10,6 +10,8 @@
           <v-autocomplete
             :items="items"
             :search-input.sync="title"            
+            :hide-no-data= "true"
+            @blur="clear()"      
             auto-select-first
             clearable
             filled
@@ -17,7 +19,6 @@
             solo-inverted
             label="Search Movie"
             color="#3CB043"
-            :hide-no-data="true"
           ></v-autocomplete>
         </v-col>
       </v-row>
@@ -26,23 +27,50 @@
 </template>
 
 <script>
-export default {
+import { searchMovie, getItems } from '../store'
+import { ref, watch } from '@vue/composition-api';
+
+export default {  
   name: 'searchBar',
-  data () {
-    return {
-      items: [],
-      title: '',
-      type: 'movie'
-    }
-  },
-  watch: {
-    title: 'search'
-  },
-  methods: {
-    search () {
-      if (this.title.length > 2) {
-        console.log("Search the movie")
+
+  setup() {
+
+    const title = ref('')
+    const items = ref([])
+
+    watch(title, () => {
+      search()
+    })
+
+    watch(getItems, () => {
+      console.log(getItems)
+      update(getItems)
+    });
+
+    const clear = () => {
+      while(items.value.length>0) {
+        items.value.splice(0, 1)
       }
+    }
+
+    const search = () => {
+       if (title.value != null && title.value.length > 2) {
+         searchMovie(title.value)
+      }
+    }
+
+    const update = (list) => {
+      list.value.forEach(item => {
+        items.value.push(item.Title)
+      })
+    }
+
+    return {
+      items,
+      title,
+      search,
+      update,
+      clear
     }
   }
 }
@@ -53,6 +81,6 @@ export default {
   margin: auto;
   width: 50%;
   padding: 10px;
-  margin-top: 10%;  
+  margin-top: 0.1;  
 }
 </style>
