@@ -1,5 +1,10 @@
 <template>
   <div>
+    <v-img 
+      src="../assets/logo.png"
+      height="200px"
+      width="250px"
+      class="ma-auto mt-10"/>
     <div class="center">
       <v-container>
         <v-row>
@@ -77,12 +82,9 @@ export default {
     const update = (list) => {
       list.value.forEach(item => {
 
-        if(item.Title.toLowerCase().startsWith(title.value.toLowerCase())) {
+        items.value.push(item.Title)
 
-          items.value.push(item.Title)
-        }
-
-        itemsComplete.value.push(item)        
+        itemsComplete.value.push(item)
       })
     }
 
@@ -99,17 +101,16 @@ export default {
 </script>
 
 <style>
+
 .center {
   margin: auto;
   width: 50%;
-  padding: 10px;
-  margin-top: 10%; 
 } 
 
 .bottom {
   margin: auto;
   width: 95%;
-  padding: 10px;
-  margin-top: 3%;  
+  margin-top: 2%;
 }
+
 </style>
