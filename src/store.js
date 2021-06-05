@@ -39,9 +39,24 @@ async function searchMovie(title) {
 
 async function commit_search(item) {
 
+  let disableStore = false
+
   const itemDetails = await OMDb.details(item.imdbID)
-  state.value.items.push(itemDetails.data)
-  cachedItems.value.push(itemDetails.data)  
+  state.value.items.forEach(value => {
+
+    if(value.Title == itemDetails.data.Title) {
+      
+      disableStore = true
+    }
+  })
+
+  if(!disableStore) {
+
+    state.value.items.push(itemDetails.data)
+    cachedItems.value.push(itemDetails.data) 
+  }
+
+    
   return;
 }
 
