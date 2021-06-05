@@ -11,12 +11,12 @@ class OMDb {
 
   static searchFor (title) {
 
-    return axios.get(`http://www.omdbapi.com/?apikey=a5604b75&s=${title}*&y=2020&type=movie`)
+    return axios.get(`https://www.omdbapi.com/?apikey=a5604b75&s=${title}*&y=2020&type=movie`)
   }  
 
   static details (id) {
 
-    return axios.get(`http://www.omdbapi.com/?apikey=a5604b75&i=${id}`)
+    return axios.get(`https://www.omdbapi.com/?apikey=a5604b75&i=${id}`)
   }
 }
 
