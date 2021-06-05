@@ -5,7 +5,7 @@ import CompositionApi from '@vue/composition-api'
 
 Vue.use(CompositionApi)
 
-const state = ref({ items: [], progress: false})
+const state = ref({ items: [], progress: false, notFound: false})
 
 const cachedTitle = ref("")
 const cachedItems = ref([])
@@ -16,6 +16,11 @@ function clear_items() {
   return;
 }
 
+function setNotFound(value) {
+
+  state.value.notFound = value
+}
+
 async function searchMovie(title) { 
 
   if(cachedTitle.value.toLowerCase().startsWith(title.toLowerCase())) {
@@ -24,15 +29,20 @@ async function searchMovie(title) {
   }
 
   else {
-
     state.value.progress = true
-    cachedTitle.value = title
+    cachedTitle.value = ""
     cachedItems.value = []
     clear_items() 
     const response = await OMDb.searchFor(title)
-    await Promise.all(response.data.Search.map(async (item) => {
-      await commit_search(item)
-    }))
+    if(response.data.Response != "False") {
+      await Promise.all(response.data.Search.map(async (item) => {
+        await commit_search(item)
+        cachedTitle.value = title
+      }))
+    }
+    else{
+      state.value.notFound = true
+    }
     state.value.progress = false
   }
 }
@@ -62,6 +72,7 @@ async function commit_search(item) {
 
 const getItems = computed(() => state.value.items)
 const getProgress = computed(() => state.value.progress)
+const getNotFound = computed(() => state.value.notFound)
 
 
 export {
@@ -69,5 +80,7 @@ export {
   searchMovie,
   getItems,
   getProgress,
-  clear_items
+  clear_items,
+  setNotFound,
+  getNotFound
 }

@@ -10,7 +10,6 @@
         <v-row>
           <v-col
             class="ma-10"
-            cols="15"
           >
             <v-combobox
               :items="items"
@@ -35,6 +34,9 @@
       <h1 class="text-center mt-5 grey--text mb-2 cursorDefault fontType" v-if="title == null || title.length == 0 ">
         Type to start searching your movie!        
       </h1>
+      <h1 class="text-center mt-5 grey--text mb-2 cursorDefault fontType" v-if="getNotFound">
+        Movie Not Found!        
+      </h1>
     </div>
     <v-snackbar
       v-model="info">
@@ -55,7 +57,7 @@
 
 <script>
 
-import { searchMovie, getItems, getProgress, clear_items } from '../store'
+import { searchMovie, getItems, getProgress, clear_items, getNotFound, setNotFound } from '../store'
 import { ref, watch } from '@vue/composition-api';
 import Items from './Items.vue';
 
@@ -74,6 +76,7 @@ export default {
     watch(title, () => {
 
       search()
+      setNotFound(false)
     })
 
     watch([getItems, getProgress], () => {
@@ -124,7 +127,8 @@ export default {
     return {
       items,
       title,
-      info
+      info,
+      getNotFound
     }
   }
 }
@@ -135,13 +139,11 @@ export default {
 .center {
 
   margin: auto;
-  width: 50%;
 } 
 
 .bottom {
 
   margin: auto;
-  width: 95%;
   margin-top: 2%;
 }
 

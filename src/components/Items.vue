@@ -1,80 +1,87 @@
 <template>
     <v-container v-if="!getProgress">
         <v-item-group v-if=" itemsWithPoster.length>0">
-            <v-row>                                
-                <v-btn
-                    icon
-                    v-show=" itemsWithPoster.length>5"
-                    class="ma-8"
-                    v-on:click="decreasePageNum()">
-                    <v-icon>mdi-arrow-left</v-icon>
-                </v-btn>                    
-                <v-col
-                v-for="index in limit = itemsWithPoster.length >= 5 ? 5 : itemsWithPoster.length" :key="index">
-                    <v-img
-                        height="375"
-                        width="250"
-                        v-on:click="setEnabledItem( itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length]), enable = true"
-                        :src=" itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length].Poster"
-                        class="ma-auto cursorPointer"
-                    ></v-img>
-                    <h3 class="text-center mt-5 grey--text mb-2 cursorPointer">
-                        {{ itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length ].Title}}
-                    </h3>
+            <v-row>                    
+                <v-col>
+                    <v-container class="flex">
+                        <div v-for="index in limit = itemsWithPoster.length >= 5 ? 5 : itemsWithPoster.length" :key="index">
+                            <v-container>
+                                <v-img
+                                    height="375"
+                                    width="250"
+                                    v-on:click="setEnabledItem( itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length]), enable = true"
+                                    :src="itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length].Poster"                        
+                                    class="ma-auto cursorPointer"
+                                ></v-img>
+                                <h3 class="text-center mt-5 grey--text mb-2 cursorPointer flexText">
+                                    {{ itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length ].Title}}
+                                </h3>
+                            </v-container>
+                        </div>
+                    </v-container>
                 </v-col>                
-                    <v-dialog
-                        v-model="enable"
-                        width="500">
-                        <v-card>
-                            <v-img
-                                height="300"
-                                width="500"
-                                :src="enabledItem.Poster"
-                                class="ma-auto cursorPointer"
-                                v-blur="blurConfig"
-                            ></v-img>
+                <v-container class="flexButton">                               
+                    <v-btn
+                        icon
+                        v-show=" itemsWithPoster.length>5"
+                        class="ma-8"
+                        v-on:click="decreasePageNum()">
+                        <v-icon>mdi-arrow-left</v-icon>
+                    </v-btn>          
+                    <v-btn
+                        icon
+                        v-show=" itemsWithPoster.length>5"
+                        class="ma-8"
+                        v-on:click="increasePageNum()">
+                        <v-icon class="ma-auto">mdi-arrow-right</v-icon>
+                    </v-btn>
+                </v-container>               
+                <v-dialog
+                    v-model="enable"
+                    width="500">
+                    <v-card>
+                        <v-img
+                            height="300"
+                            width="500"
+                            :src="enabledItem.Poster"
+                            class="ma-auto cursorPointer"
+                            v-blur="blurConfig"
+                        ></v-img>
 
-                            <v-card-title>                            
-                                {{enabledItem.Title}}                           
-                            </v-card-title>
+                        <v-card-title>                            
+                            {{enabledItem.Title}}                           
+                        </v-card-title>
 
-                            <v-card-text>                            
-                                {{enabledItem.Plot}}
-                                <br />
-                                <br />
-                                Duration: {{enabledItem.Runtime}}
-                                <br />
-                                <br />                             
-                                IMDB:   {{enabledItem.imdbRating}}
-                                <br />
-                                <br /> 
-                                Genre: {{enabledItem.Genre}}
-                                <br />
-                                <br />
-                                Cast: {{enabledItem.Actors}}
-                                <br />
-                                <br />
-                                Director: {{enabledItem.Director}}  
-                            </v-card-text>
+                        <v-card-text>                            
+                            {{enabledItem.Plot}}
+                            <br />
+                            <br />
+                            Duration: {{enabledItem.Runtime}}
+                            <br />
+                            <br />                             
+                            IMDB:   {{enabledItem.imdbRating}}
+                            <br />
+                            <br /> 
+                            Genre: {{enabledItem.Genre}}
+                            <br />
+                            <br />
+                            Cast: {{enabledItem.Actors}}
+                            <br />
+                            <br />
+                            Director: {{enabledItem.Director}}  
+                        </v-card-text>
 
-                            <v-card-actions class="justify-center">
-                                <v-btn
-                                    color="primary"
-                                    text
-                                    v-on:click="enable = false"
-                                >
-                                   <v-icon class="ma-auto">mdi-arrow-down</v-icon>
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-                <v-btn
-                    icon
-                    v-show=" itemsWithPoster.length>5"
-                    class="ma-8"
-                    v-on:click="increasePageNum()">
-                    <v-icon class="ma-auto">mdi-arrow-right</v-icon>
-                </v-btn> 
+                        <v-card-actions class="justify-center">
+                            <v-btn
+                                color="primary"
+                                text
+                                v-on:click="enable = false"
+                            >
+                                <v-icon class="ma-auto">mdi-arrow-down</v-icon>
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog> 
             </v-row>
         </v-item-group>
     </v-container>
@@ -199,5 +206,22 @@ export default({
     .cursorPointer {
 
         cursor: pointer;
+    }
+
+    .flex {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .flexButton {
+        display: flex;
+        justify-content: center;
+    }
+
+    .flexText {
+
+        display: flex;
+        justify-content: center;
     }
 </style>
