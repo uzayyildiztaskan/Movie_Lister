@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-      <searchBar class="color"></searchBar>
+      <searchBar></searchBar>
   </v-app>
 </template>
 

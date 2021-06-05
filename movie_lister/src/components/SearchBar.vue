@@ -15,7 +15,7 @@
             <v-combobox
               :items="items"
               :search-input.sync="title"            
-              :hide-no-data= "true"
+              :hide-no-data="true"
               auto-select-first
               clearable
               filled
@@ -29,13 +29,14 @@
       </v-container>
     </div>
     <div class="bottom">
-      <items :list="itemsComplete"></items>
+      <items :title="title"/>
     </div>
   </div>
 </template>
 
 <script>
-import { searchMovie, getItems, getProgress } from '../store'
+
+import { searchMovie, getItems, getProgress, clear_items } from '../store'
 import { ref, watch } from '@vue/composition-api';
 import Items from './Items.vue';
 
@@ -47,54 +48,60 @@ export default {
 
     const title = ref('')
     const items = ref([])
-    const itemsComplete = ref([])
 
     watch(title, () => {
+
       search()
     })
 
     watch([getItems, getProgress], () => {
-      if(!getProgress.value){       
+
+      if(!getProgress.value){
+
         update(getItems)
       }
     });
 
-    const clear = () => {
-      items.value = []
-    }
+    watch(getProgress, () => {
 
-    const clearPosters = () => {
-      itemsComplete.value = []
-    }
+      console.log(getProgress.value)
+    })
 
     const search = () => {
+
       if (title.value != null && title.value.length > 2) {
-        clearPosters()
+
         searchMovie(title.value)
       }
 
-      else {
-        clear()
-        clearPosters()
+      else if(title.value == null){
+
+        clear_items()
       }
     }
 
     const update = (list) => {
-      list.value.forEach(item => {
 
-        items.value.push(item.Title)
+      if(list.value.length !=0 ) {
+        
+        list.value.forEach(item => {
 
-        itemsComplete.value.push(item)
-      })
+          if(item.Title.toLowerCase().startsWith(title.value.toLowerCase())){
+
+            items.value.push(item.Title)          
+          }
+        });
+      }
+
+      else {
+
+        items.value = []
+      }
     }
 
     return {
       items,
-      itemsComplete,
-      title,
-      search,
-      update,
-      clear
+      title
     }
   }
 }
@@ -103,14 +110,15 @@ export default {
 <style>
 
 .center {
+
   margin: auto;
   width: 50%;
 } 
 
 .bottom {
+
   margin: auto;
   width: 95%;
   margin-top: 2%;
 }
-
 </style>

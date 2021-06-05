@@ -1,33 +1,30 @@
 <template>
-    <v-container>
-        <v-item-group v-if="list.length>0">
+    <v-container v-if="!getProgress">
+        <v-item-group v-if=" itemsWithPoster.length>0">
             <v-row>                                
                 <v-btn
                     icon
-                    v-show="list.length>5"
+                    v-show=" itemsWithPoster.length>5"
                     class="ma-8"
-                    v-on:click="decreasePageNum(list)"
-                >
+                    v-on:click="decreasePageNum()">
                     <v-icon>mdi-arrow-left</v-icon>
                 </v-btn>                    
                 <v-col
-                v-for="index in limit = list.length >= 5 ? 5 : list.length" :key="index"
-                > 
+                v-for="index in limit = itemsWithPoster.length >= 5 ? 5 : itemsWithPoster.length" :key="index"> 
                     <v-img
                         height="375"
                         width="250"
-                        v-on:click="setEnabledItem(list[(index-1+(5*pageNum))%list.length]), enable = true"
-                        :src="list[(index-1+(5*pageNum))%list.length].Poster"
+                        v-on:click="setEnabledItem( itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length]), enable = true"
+                        :src=" itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length].Poster"
                         class="ma-auto cursorPointer"
                     ></v-img>
                     <h3 class="text-center mt-5 grey--text mb-2 cursorPointer">
-                        {{list[(index-1+(5*pageNum))%list.length ].Title}}
+                        {{ itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length ].Title}}
                     </h3>
                 </v-col>                
                     <v-dialog
                         v-model="enable"
-                        width="500"
-                    >
+                        width="500">
                         <v-card>
                             <v-img
                                 height="300"
@@ -73,36 +70,41 @@
                     </v-dialog>
                 <v-btn
                     icon
-                    v-show="list.length>5"
+                    v-show=" itemsWithPoster.length>5"
                     class="ma-8"
-                    v-on:click="increasePageNum(list)"
-                >
+                    v-on:click="increasePageNum()">
                     <v-icon class="ma-auto">mdi-arrow-right</v-icon>
                 </v-btn> 
             </v-row>
         </v-item-group>
     </v-container>
+    <v-layout align-center justify-center column v-else class="mt-16">
+    <v-progress-circular
+        indeterminate
+        color="primary"
+    ></v-progress-circular>
+    </v-layout>
 </template>
 
 <script>
 
-import { ref } from '@vue/composition-api';
-import Vue from 'vue'
-import vBlur from 'v-blur'
+import { ref, watch } from '@vue/composition-api';
+import Vue from 'vue';
+import vBlur from 'v-blur';
+import { getItems, getProgress } from '../store';
 
 Vue.use(vBlur)
 
 export default({
-    name: 'items',
+
+    name: 'items',    
 
     props: {
 
-        list: {
-            type: Array
-        }
+        title: String
     },
 
-    setup() {
+    setup(props) {
         
         const pageNum = ref(1)
 
@@ -110,17 +112,45 @@ export default({
 
         const enabledItem = ref(Object)
 
+        const itemsWithPoster = ref([])
+
         const blurConfig = {
+
             isBlurred: true,
             filter: 'blur(4.5px)',
             transition: 'all .3s linear'          
         }
 
-        const decreasePageNum = (list) => {
+        watch([getItems, getProgress], () => {
+
+            if(!getProgress.value){
+
+                itemsWithPoster.value = []
+
+                if(getItems.value.length > 0) {
+
+                    getItems.value.forEach(item => {
+
+                        if(item.Title.toLowerCase().includes(props.title.toLowerCase())) {
+
+                            itemsWithPoster.value.push(item)
+                        }
+                    })
+                }
+
+                else {
+
+                    itemsWithPoster.value = []
+                }
+                
+            }
+        });
+
+        const decreasePageNum = () => {
 
             if(pageNum.value == 0) {
                 
-                pageNum.value = (list.length/5)+1
+                pageNum.value = (itemsWithPoster.value.length/5)+1
             }
 
             else {
@@ -134,9 +164,9 @@ export default({
             enabledItem.value = item
         }
 
-        const increasePageNum = (list) => {
+        const increasePageNum = () => {
 
-            if(pageNum.value == (list.length/5)+1) {
+            if(pageNum.value == (itemsWithPoster.value.length/5)+1) {
                 
                 pageNum.value = 0
             }
@@ -147,14 +177,17 @@ export default({
             }
         }
 
-        return{
+        return {
+
             pageNum,
             decreasePageNum,
             increasePageNum,
             enable,
             setEnabledItem,
             enabledItem,
-            blurConfig
+            blurConfig,
+            itemsWithPoster,
+            getProgress
         }
     }
 
@@ -162,14 +195,9 @@ export default({
 </script>
 
 <style>
-    ul, li {
-
-        display:inline
-    }
 
     .cursorPointer {
 
         cursor: pointer;
     }
-
 </style>
