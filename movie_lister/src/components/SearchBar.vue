@@ -22,7 +22,7 @@
               rounded
               solo-inverted
               label="Search Movie"
-              color="#3CB043"
+              item-color="#3CB043"
             ></v-combobox>
           </v-col>
         </v-row>
@@ -31,6 +31,25 @@
     <div class="bottom">
       <items :title="title"/>
     </div>
+    <div class="bottomInfo">
+      <h1 class="text-center mt-5 grey--text mb-2 cursorDefault fontType" v-if="title == null || title.length == 0 ">
+        Type to start searching your movie!        
+      </h1>
+    </div>
+    <v-snackbar
+      v-model="info">
+      Select a movie from the list to display movie details.
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="blue"
+          text
+          v-bind="attrs"
+          @click="info = false"
+        >
+          Got it!
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -49,6 +68,9 @@ export default {
     const title = ref('')
     const items = ref([])
 
+    const info = ref(false)
+    const infoNotGiven = ref(true)
+
     watch(title, () => {
 
       search()
@@ -61,11 +83,6 @@ export default {
         update(getItems)
       }
     });
-
-    watch(getProgress, () => {
-
-      console.log(getProgress.value)
-    })
 
     const search = () => {
 
@@ -91,6 +108,11 @@ export default {
             items.value.push(item.Title)          
           }
         });
+
+        if(infoNotGiven.value) {
+          infoNotGiven.value = false
+          info.value = true
+        }
       }
 
       else {
@@ -101,7 +123,8 @@ export default {
 
     return {
       items,
-      title
+      title,
+      info
     }
   }
 }
@@ -120,5 +143,21 @@ export default {
   margin: auto;
   width: 95%;
   margin-top: 2%;
+}
+
+.bottomInfo {
+
+  margin: auto;
+  margin-top: 5%;
+}
+
+.cursorDefault {
+
+  cursor: default;
+}
+
+.fontType {
+  
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 </style>

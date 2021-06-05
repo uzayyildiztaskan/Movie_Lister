@@ -10,7 +10,7 @@
                     <v-icon>mdi-arrow-left</v-icon>
                 </v-btn>                    
                 <v-col
-                v-for="index in limit = itemsWithPoster.length >= 5 ? 5 : itemsWithPoster.length" :key="index"> 
+                v-for="index in limit = itemsWithPoster.length >= 5 ? 5 : itemsWithPoster.length" :key="index">
                     <v-img
                         height="375"
                         width="250"
@@ -146,6 +146,11 @@ export default({
             }
         });
 
+        const setEnabledItem = (item) => {
+
+            enabledItem.value = item
+        }
+
         const decreasePageNum = () => {
 
             if(pageNum.value == 0) {
@@ -157,11 +162,6 @@ export default({
                 
                 pageNum.value = pageNum.value-1
             }
-        }
-
-        const setEnabledItem = (item) => {
-
-            enabledItem.value = item
         }
 
         const increasePageNum = () => {
