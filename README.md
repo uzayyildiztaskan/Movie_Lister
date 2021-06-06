@@ -2,7 +2,7 @@
 
 A web application that searchs for movies that was released in 2020 and displays movie details (duration, imdb, cast etc.) using OMDb API.
 
-## Features
+### Features
 ```
 Searchbar: 
     *Autocomplete option to find best matches for searched string/title.
@@ -19,7 +19,7 @@ App:
     !!! Movies that are displayed with no `image available` poster are movies without any poster available from OMDb API.
 ```
 
-## Project
+### Project
 
     Project is deployed on https://movie-finder.onrender.com .
 
