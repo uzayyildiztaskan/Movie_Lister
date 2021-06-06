@@ -91,6 +91,10 @@ export default {
 
       if (title.value != null && title.value.length > 2) {
 
+        if(title.value.charAt(title.value.length-1) == ' ') {
+          title.value = title.value.substring(0,title.value.lastIndexOf(' '))
+        }
+
         searchMovie(title.value)
       }
 

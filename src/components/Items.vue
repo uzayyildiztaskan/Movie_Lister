@@ -9,9 +9,18 @@
                                 <v-img
                                     height="375"
                                     width="250"
+                                    v-if="itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length].Poster != 'N/A' "
                                     v-on:click="setEnabledItem( itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length]), enable = true"
                                     :src="itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length].Poster"                        
-                                    class="ma-auto cursorPointer"
+                                    class="ma-auto cursorPointer"   
+                                ></v-img>
+                                <v-img
+                                    height="375"
+                                    width="250"
+                                    v-else
+                                    v-on:click="setEnabledItem( itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length]), enable = true"
+                                    :src="require('../assets/noImage.png')"                        
+                                    class="ma-auto cursorPointer"   
                                 ></v-img>
                                 <h3 class="text-center mt-5 grey--text mb-2 cursorPointer flexText">
                                     {{ itemsWithPoster[(index-1+(5*pageNum))% itemsWithPoster.length ].Title}}
@@ -148,8 +157,7 @@ export default({
                 else {
 
                     itemsWithPoster.value = []
-                }
-                
+                }              
             }
         });
 

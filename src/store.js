@@ -61,7 +61,7 @@ async function commit_search(item) {
   })
 
   if(!disableStore) {
-
+    
     state.value.items.push(itemDetails.data)
     cachedItems.value.push(itemDetails.data) 
   }
