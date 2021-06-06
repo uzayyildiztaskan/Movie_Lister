@@ -20,9 +20,8 @@ App:
 ```
 
 ## Project
-```
+
     Project is deployed on https://movie-finder.onrender.com .
-```
 
 ## Project setup
 ```
